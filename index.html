@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Web App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #000000;
+            animation: fadeIn 1s ease-in-out;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            animation: fadeInUp 0.5s ease-in-out;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333333;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.5s ease;
+        }
+        .form-group input:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: none;
+        }
+        .form-group input.error {
+            border-color: #ff0000;
+        }
+        .submit-button {
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            animation: fadeInUp 0.5s ease-in-out;
+        }
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+        .instructions {
+            font-size: 12px;
+            color: #666666;
+            margin-top: -5px;
+            margin-bottom: 10px;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                width: 100%;
+                max-width: none;
+                height: auto;
+                padding-bottom: 20px;
+            }
+            .form-group input {
+                font-size: 14px;
+                padding: 10px;
+            }
+            .submit-button {
+                font-size: 14px;
+                padding: 12px;
+            }
+        }
+    </style>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Введите данные</h2>
+        <div class="form-group">
+            <label for="className">Введите название класса</label>
+            <input type="text" id="className" name="className" placeholder="Название класса" oninput="validateAndMoveToNext(event, 'schoolName')" onkeypress="handleKeyPress(event)">
+        </div>
+        <div class="form-group">
+            <label for="schoolName">Введите название школы</label>
+            <input type="text" id="schoolName" name="schoolName" placeholder="Название школы" oninput="validateAndMoveToNext(event, 'cityName')" onkeypress="handleKeyPress(event)">
+        </div>
+        <div class="form-group">
+            <label for="cityName">Введите название города</label>
+            <input type="text" id="cityName" name="cityName" placeholder="Название города" oninput="validateAndMoveToNext(event, 'nickname')" onkeypress="handleKeyPress(event)">
+        </div>
+        <div class="form-group">
+            <label for="nickname">Введите никнейм</label>
+            <div class="instructions">Используйте только латинские буквы, цифры и подчеркивание (_).</div>
+            <input type="text" id="nickname" name="nickname" maxlength="16" oninput="ensureValidChars()" onkeypress="handleNicknameKeyPress(event)">
+        </div>
+        <button class="submit-button" onclick="submitForm()">Отправить</button>
+    </div>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+
+        tg.expand();
+
+        function validateAndMoveToNext(event, nextFieldId) {
+            const currentValue = event.target.value.trim();
+            if (currentValue !== '') {
+                document.getElementById(nextFieldId).focus();
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Предотвращаем действие по умолчанию (автосабмит формы)
+                event.target.blur(); // Снимаем фокус с текущего поля
+                return false; // Предотвращаем дальнейшую обработку нажатия клавиши
+            }
+        }
+
+        function handleNicknameKeyPress(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Предотвращаем действие по умолчанию (автосабмит формы)
+                event.target.blur(); // Снимаем фокус с текущего поля
+                return false; // Предотвращаем дальнейшую обработку нажатия клавиши
+            }
+        }
+
+        function ensureValidChars() {
+            const nicknameInput = document.getElementById('nickname');
+            let value = nicknameInput.value;
+
+            // Удалить все символы, кроме латиницы, цифр и подчеркивания, и следить за максимальной длиной
+            value = '@' + value.slice(1).replace(/[^a-zA-Z0-9_]/g, '').slice(0, 15);
+
+            nicknameInput.value = value;
+        }
+
+        function submitForm() {
+            const className = document.getElementById('className').value;
+            const schoolName = document.getElementById('schoolName').value;
+            const cityName = document.getElementById('cityName').value;
+            const nickname = document.getElementById('nickname').value;
+
+            let hasError = false;
+
+            if (!className) {
+                document.getElementById('className').classList.add('error');
+                hasError = true;
+            } else {
+                document.getElementById('className').classList.remove('error');
+            }
+
+            if (!schoolName) {
+                document.getElementById('schoolName').classList.add('error');
+                hasError = true;
+            } else {
+                document.getElementById('schoolName').classList.remove('error');
+            }
+
+            if (!cityName) {
+                document.getElementById('cityName').classList.add('error');
+                hasError = true;
+            } else {
+                document.getElementById('cityName').classList.remove('error');
+            }
+
+            if (nickname.length < 2) {
+                document.getElementById('nickname').classList.add('error');
+                hasError = true;
+            } else {
+                document.getElementById('nickname').classList.remove('error');
+            }
+
+            if (hasError) {
+                return;
+            }
+
+            const data = {
+                className: className,
+                schoolName: schoolName,
+                cityName: cityName,
+                nickname: nickname
+            };
+
+            // Отправка данных в Web App
+            tg.sendData(JSON.stringify(data));
+
+            // Закрытие окна Web App
+            tg.close();
+        }
+    </script>
+</body>
+</html>
