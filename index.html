@@ -151,55 +151,16 @@
             <div class="instructions">Используйте только латинские буквы, цифры и подчеркивание (_).</div>
             <input type="text" id="nickname" name="nickname" maxlength="16" oninput="ensureValidChars()" value="@" onkeydown="handleEnter(event)">
         </div>
-        <button class="submit-button" onclick="submitForm()">Отправить</button>
     </div>
 
     <script>
         let tg = window.Telegram.WebApp;
 
         tg.expand();
+        tg.MainButton.setText("Отправить");
+        tg.MainButton.show();
 
-        function validateClassName() {
-            const input = document.getElementById('className');
-            let value = input.value;
-            value = value.replace(/^\s+/, '').replace(/\s{2,}/g, ' ');
-            input.value = value;
-        }
-
-        function validateSchoolName() {
-            const input = document.getElementById('schoolName');
-            let value = input.value;
-            value = value.replace(/^\s+/, '').replace(/\s{2,}/g, ' ');
-            input.value = value;
-        }
-
-        function validateCityName() {
-            const input = document.getElementById('cityName');
-            let value = input.value;
-            value = value.replace(/^\s+/, '').replace(/\s{2,}/g, ' ');
-            input.value = value;
-        }
-
-        function validateSchoolShift() {
-            const select = document.getElementById('schoolShift');
-            if (select.value === "") {
-                select.classList.add('error');
-            } else {
-                select.classList.remove('error');
-            }
-        }
-
-        function ensureValidChars() {
-            const nicknameInput = document.getElementById('nickname');
-            let value = nicknameInput.value;
-
-            // Удалить все символы, кроме латиницы, цифр и подчеркивания, и следить за максимальной длиной
-            value = '@' + value.slice(1).replace(/[^a-zA-Z0-9_]/g, '').slice(0, 15);
-
-            nicknameInput.value = value;
-        }
-
-        function submitForm() {
+        tg.MainButton.onClick(function() {
             const className = document.getElementById('className').value;
             const schoolName = document.getElementById('schoolName').value;
             const cityName = document.getElementById('cityName').value;
@@ -248,6 +209,7 @@
             }
 
             const data = {
+                appId: 'creatingClass',
                 className: className,
                 schoolName: schoolName,
                 cityName: cityName,
@@ -260,6 +222,46 @@
 
             // Закрытие окна Web App
             tg.close();
+        });
+        
+        function validateClassName() {
+            const input = document.getElementById('className');
+            let value = input.value;
+            value = value.replace(/^\s+/, '').replace(/\s{2,}/g, ' ');
+            input.value = value;
+        }
+
+        function validateSchoolName() {
+            const input = document.getElementById('schoolName');
+            let value = input.value;
+            value = value.replace(/^\s+/, '').replace(/\s{2,}/g, ' ');
+            input.value = value;
+        }
+
+        function validateCityName() {
+            const input = document.getElementById('cityName');
+            let value = input.value;
+            value = value.replace(/^\s+/, '').replace(/\s{2,}/g, ' ');
+            input.value = value;
+        }
+
+        function validateSchoolShift() {
+            const select = document.getElementById('schoolShift');
+            if (select.value === "") {
+                select.classList.add('error');
+            } else {
+                select.classList.remove('error');
+            }
+        }
+
+        function ensureValidChars() {
+            const nicknameInput = document.getElementById('nickname');
+            let value = nicknameInput.value;
+
+            // Удалить все символы, кроме латиницы, цифр и подчеркивания, и следить за максимальной длиной
+            value = '@' + value.slice(1).replace(/[^a-zA-Z0-9_]/g, '').slice(0, 15);
+
+            nicknameInput.value = value;
         }
 
         function handleEnter(event) {
