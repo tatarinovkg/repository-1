@@ -3,23 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Web App</title>
+    <title>Создание класса</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f0f0f5;
             padding: 20px;
             box-sizing: border-box;
+            margin: 0;
         }
         .container {
-            width: 100%;
-            max-width: 400px;
-            box-sizing: border-box;
+            max-width: 90%;
+            margin: 0 auto;
+            text-align: center;
         }
         .container h2 {
             text-align: center;
@@ -223,7 +219,7 @@
             // Закрытие окна Web App
             tg.close();
         });
-        
+
         function validateClassName() {
             const input = document.getElementById('className');
             let value = input.value;
